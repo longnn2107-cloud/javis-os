@@ -210,6 +210,7 @@ a.ib-post:hover .ib-post-go { color: var(--accent); }
 .ib-file { position: relative; flex: none; display: inline-flex; align-items: center; gap: 6px; height: 56px; max-width: 220px;
   border: 1px solid var(--hairline); border-radius: 10px; background: var(--surface-2); overflow: hidden; }
 .ib-file img { width: 56px; height: 56px; object-fit: cover; display: block; }
+.ht-thread.ib-drop { outline: 2px dashed var(--accent, #7c3aed); outline-offset: -6px; }
 .ib-file-ico { display: grid; place-items: center; width: 36px; color: var(--text3); }
 .ib-file-ico svg { width: 18px; height: 18px; }
 .ib-file-n { font-size: 14px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 30px; }

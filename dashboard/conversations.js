@@ -1713,6 +1713,34 @@
       if (plus && plusIn) {
         plus.onclick = function () { plusIn.click(); };
         plusIn.onchange = function () { addFiles(c, plusIn.files); };
+        // Paste (Ctrl+V a screenshot) and drop files on the chat feed the same tray as the + button.
+        var onlyImg = (plusIn.getAttribute("accept") || "").indexOf("image") === 0;
+        var keep = function (list) {
+          return Array.prototype.filter.call(list || [], function (f) { return f && (!onlyImg || /^image\//.test(f.type || "")); });
+        };
+        ta.onpaste = function (e) {
+          var cd = e.clipboardData, fs = [];
+          Array.prototype.forEach.call((cd && cd.items) || [], function (it) {
+            var f = it.kind === "file" && it.getAsFile();
+            if (f) fs.push(f.name && f.name !== "image.png" ? f : new File([f], "image." + ((f.type || "image/png").split("/")[1] || "png"), { type: f.type || "image/png" }));
+          });
+          fs = keep(fs);
+          if (!fs.length) return;
+          e.preventDefault();
+          addFiles(c, fs);
+        };
+        box.ondragover = function (e) {
+          if (!e.dataTransfer || Array.prototype.indexOf.call(e.dataTransfer.types || [], "Files") < 0) return;
+          e.preventDefault(); box.classList.add("ib-drop");
+        };
+        box.ondragleave = function (e) { if (!box.contains(e.relatedTarget)) box.classList.remove("ib-drop"); };
+        box.ondrop = function (e) {
+          box.classList.remove("ib-drop");
+          var fs = keep(e.dataTransfer && e.dataTransfer.files);
+          if (!fs.length) return;
+          e.preventDefault();
+          addFiles(c, fs);
+        };
       }
       box.querySelectorAll(".ib-file-x").forEach(function (b) {
         b.onclick = function () { dropFile(c, Number(b.getAttribute("data-i")) || 0); };
